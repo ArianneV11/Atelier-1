@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta author="Arianne Verdy">
+    <title>Atelier 1</title>
+</head>
+
+<body>
+    <div style="text-align:center; margin-bottom: 30px;font-size: 35px;"><b>Ventes 2022</b></div>
+    <div id="graphContainer" style="margin:0 auto;padding: 10px;">
+
+    </div>
+    <script defer>
+        const svgns = "http://www.w3.org/2000/svg";
+        let viewPortMaxUnitX = 1000;
+        let viewPortMaxUnitY = 1000;
+        let viewport = null;
+        let mois = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+        let ventes = [6500, 5550, 4200, 4525, 2500, 1500, 500, 1000, 1750, 2300, 3700, 3500];
+        init_UI();
+        function init_UI() {
+            insertViewPort("graphContainer");
+            let maxValue = Math.max(...ventes);
+            //console.log(maxValue);
+            Graph(maxValue + 500, 100, 100, 10);
+
+        }
+        function insertViewPort(containerId) {
+            viewport = document.createElementNS(svgns, "svg");
+            viewport.setAttribute("id", "viewport");
+            viewport.setAttribute("viewBox", "0 -15 " + viewPortMaxUnitX + " " + viewPortMaxUnitY);
+            document.getElementById(containerId).appendChild(viewport);
+        }
+        function Graph(maxGraph, stepValue, spacing, smallLine) {
+            let nbLines = maxGraph / (stepValue * smallLine);
+            let bigStep = stepValue * smallLine;
+            
+            for (let i = 0; i <= nbLines * smallLine; i++) {
+                viewport.appendChild(line(200, spacing / smallLine * i, 800, spacing / smallLine* i, 'gray', 1));
+                if((((maxGraph - (i * stepValue)) % bigStep) == 0)){
+                    viewport.appendChild(text(150, spacing / smallLine * i, "$" + (maxGraph - (i * stepValue).toString())));
+                    viewport.appendChild(line(200, spacing / smallLine * i, 800, spacing / smallLine * i, 'black', 2));
+                }
+            }
+            
+            let nbMois = mois.length;
+            for(let w = 0; w < nbMois; w++){
+                let valVentes = ventes[w];
+                //let posY = valVentes *((spacing / smallLine) * nbLines);
+                //viewport.appendChild(text(50 * w, + (maxGraph - (y * stepValue))));
+                viewport.appendChild(text(215 + (48 * w), (spacing / smallLine * (nbLines * smallLine)) - ((valVentes / stepValue) * (spacing / smallLine)) - 10, "$" + valVentes.toString()));
+                viewport.appendChild(rect(215 + (48 * w), (spacing / smallLine * (nbLines * smallLine)) - ((valVentes / stepValue) * (spacing / smallLine)), 40, (valVentes / stepValue) * (spacing / smallLine), 'green', 'black', 1));
+                viewport.appendChild(text(215 + (48 * w), spacing / smallLine * (nbLines * smallLine) + 20, mois[w], 45));
+                if(valVentes <= 4400){
+                    viewport.appendChild(rect(215 + (48 * w), (spacing / smallLine * (nbLines * smallLine)) - ((valVentes / stepValue) * (spacing / smallLine)), 40, (valVentes / stepValue) * (spacing / smallLine), 'yellow', 'black', 1));
+                }
+                if(valVentes <= 3000){
+                    viewport.appendChild(rect(215 + (48 * w), (spacing / smallLine * (nbLines * smallLine)) - ((valVentes / stepValue) * (spacing / smallLine)), 40, (valVentes / stepValue) * (spacing / smallLine), 'orange', 'black', 1));
+                }
+                if(valVentes <= 1000){
+                    viewport.appendChild(rect(215 + (48 * w), (spacing / smallLine * (nbLines * smallLine)) - ((valVentes / stepValue) * (spacing / smallLine)), 40, (valVentes / stepValue) * (spacing / smallLine), 'red', 'black', 1));
+                }
+            }
+        }
+        function rect(x, y, width, height, fill = "white", stroke = "black", strokeWidth = 2) {
+            let rect = document.createElementNS(svgns, "rect");
+            rect.setAttribute("x", x); rect.setAttribute("y", y);
+            rect.setAttribute("width", width); rect.setAttribute("height", height);
+            rect.setAttribute("fill", fill); rect.setAttribute("stroke", stroke);
+            rect.setAttribute("stroke-width", strokeWidth);
+            return rect;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////
+        function line(x1, y1, x2, y2, stroke = "black", strokeWidth = 1) {
+            let line = document.createElementNS(svgns, "line");
+            line.setAttribute("x1", x1); line.setAttribute("y1", y1);
+            line.setAttribute("x2", x2); line.setAttribute("y2", y2);
+            line.setAttribute("stroke", stroke);
+            line.setAttribute("stroke-width", strokeWidth);
+            return line;
+        }
+        function text(x, y, content, angle = 0, size = "1", fill = "black") {
+            let text = document.createElementNS(svgns, "text");
+            text.setAttribute("x", x); text.setAttribute("y", y);
+            text.setAttribute("transform", `rotate(${angle},${x},${y})`);
+            text.setAttribute("font-size", size + "em");
+            text.setAttribute("fill", fill);
+            text.innerHTML = content;
+            return text;
+        }
+
+    </script>
+</body>
+
+</html>
