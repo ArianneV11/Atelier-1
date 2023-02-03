@@ -10,7 +10,6 @@
 <body>
     <div style="text-align:center; margin-bottom: 30px;font-size: 35px;"><b>Ventes 2022</b></div>
     <div id="graphContainer" style="margin:0 auto;padding: 10px;">
-
     </div>
     <script defer>
         const svgns = "http://www.w3.org/2000/svg";
@@ -23,9 +22,7 @@
         function init_UI() {
             insertViewPort("graphContainer");
             let maxValue = Math.max(...ventes);
-            //console.log(maxValue);
             Graph(maxValue + 500, 100, 100, 10);
-
         }
         function insertViewPort(containerId) {
             viewport = document.createElementNS(svgns, "svg");
@@ -36,7 +33,6 @@
         function Graph(maxGraph, stepValue, spacing, smallLine) {
             let nbLines = maxGraph / (stepValue * smallLine);
             let bigStep = stepValue * smallLine;
-            
             for (let i = 0; i <= nbLines * smallLine; i++) {
                 viewport.appendChild(line(200, spacing / smallLine * i, 800, spacing / smallLine* i, 'gray', 1));
                 if((((maxGraph - (i * stepValue)) % bigStep) == 0)){
@@ -44,12 +40,9 @@
                     viewport.appendChild(line(200, spacing / smallLine * i, 800, spacing / smallLine * i, 'black', 2));
                 }
             }
-            
             let nbMois = mois.length;
             for(let w = 0; w < nbMois; w++){
                 let valVentes = ventes[w];
-                //let posY = valVentes *((spacing / smallLine) * nbLines);
-                //viewport.appendChild(text(50 * w, + (maxGraph - (y * stepValue))));
                 viewport.appendChild(text(215 + (48 * w), (spacing / smallLine * (nbLines * smallLine)) - ((valVentes / stepValue) * (spacing / smallLine)) - 10, "$" + valVentes.toString()));
                 viewport.appendChild(rect(215 + (48 * w), (spacing / smallLine * (nbLines * smallLine)) - ((valVentes / stepValue) * (spacing / smallLine)), 40, (valVentes / stepValue) * (spacing / smallLine), 'green', 'black', 1));
                 viewport.appendChild(text(215 + (48 * w), spacing / smallLine * (nbLines * smallLine) + 20, mois[w], 45));
@@ -72,7 +65,6 @@
             rect.setAttribute("stroke-width", strokeWidth);
             return rect;
         }
-
         ///////////////////////////////////////////////////////////////////////////
         function line(x1, y1, x2, y2, stroke = "black", strokeWidth = 1) {
             let line = document.createElementNS(svgns, "line");
@@ -91,7 +83,6 @@
             text.innerHTML = content;
             return text;
         }
-
     </script>
 </body>
 
